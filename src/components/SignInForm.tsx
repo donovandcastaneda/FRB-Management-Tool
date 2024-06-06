@@ -1,3 +1,5 @@
+"use client"
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -17,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { login } from "@/app/auth/login/actions";
 
 const FormSchema = z.object({
   username: z.string().min(7, {
@@ -25,70 +28,39 @@ const FormSchema = z.object({
   password: z.string().min(7, {
     message: "Password is incorrect",
   }),
-  // confirm: z.string()
-}) 
-// .refine((data) => data.confirm === data.password, {
-//   message: "Password did not match",
-//   path: ["confirm"],
-// });
+});
 
 export default function SignInForm() {
-  const form =
-    useForm <
-    z.infer<typeof FormSchema>>({
-      resolver: zodResolver(FormSchema),
-      defaultValues: {
-        username: "",
-        password: "",
-        // confirm: "",
-      },
-    });
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  });
 
-    const [isLoading, setIsLoading] = useState(false); 
-    const router = useRouter(); 
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
 
-    async function onLogin(values: any) {
-      setIsLoading(true); 
-  
-      try {
-        //   const response = await axios.post("/login", values);
-      
+  async function onSubmit(values: any) {
+    setIsLoading(true);
+    const formData = new FormData();
+    formData.append("username", values.username);
+    formData.append("password", values.password);
 
-          if (response.status === 200) {
-              setAuthHeader(response.data.token);
-              toast({ title: "Login successful!"}); 
-  
-              if (response.data && response.data.id) {
-                  const id = response.data.id;
-                  router.push(`/dashboard/${id}`);
-
-              } else {
-                  console.error("Missing user data in response:", response.data);
-                  throw new Error("User data is missing in the response");
-              }
-  
-          } else {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-  
-      } catch (error) {
-          setAuthHeader(null);
-          console.error("Login failed:", error);
-          toast({ title: "Login failed", variant: "destructive" }); // Show error toast
-      }
-      finally {
-          setIsLoading(false); // End loading
-      }
-  }
-  
-  
-    function onSubmit(values: any) {
-      onLogin(values.username, values.password);
+    try {
+      await login(formData);
+      toast({ title: "Login successful" });
+      router.push("/dashboard");
+    } catch (error) {
+      toast({ title: "Login failed", variant: "destructive" }); 
+    } finally {
+      setIsLoading(false);
     }
+  }
 
   return (
-
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
         <FormField
@@ -128,14 +100,15 @@ export default function SignInForm() {
             </FormItem>
           )}
         />
-        
-        <Button type="submit" className="w-full flex gap-2" disabled={isLoading}>
-  {isLoading ? <Loader2 className="animate-spin" /> : 'Sign In'}
-</Button>
 
+        <Button
+          type="submit"
+          className="w-full flex gap-2"
+          disabled={isLoading}
+        >
+          {isLoading ? <Loader2 className="animate-spin" /> : "Sign In"}
+        </Button>
       </form>
     </Form>
-  
-
   );
 }
