@@ -5,13 +5,12 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
 export type Payment = {
   id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
+  name: string;
   email: string;
+  phone: number;
+  creation: Date;
 };
 
 export const columns: ColumnDef<Payment>[] = [
@@ -38,8 +37,8 @@ export const columns: ColumnDef<Payment>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "name",
+    header: "Name",
   },
   {
     accessorKey: "email",
@@ -56,7 +55,11 @@ export const columns: ColumnDef<Payment>[] = [
     },
   },
   {
-    accessorKey: "amount",
-    header: "Amount",
+    accessorKey: "phone",
+    header: "Phone",
+  },
+  {
+    accessorKey: "creation",
+    header: "Creation Date",
   },
 ];
