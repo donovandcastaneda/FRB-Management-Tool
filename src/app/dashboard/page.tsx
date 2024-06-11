@@ -11,7 +11,7 @@ const useCustomers = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/api/customers');
+        const response = await axios.get('/api/get-customers');
         console.log('API response:', response.data); // Log API response
         setData(response.data.payments);
       } catch (error) {
