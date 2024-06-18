@@ -1,84 +1,93 @@
-"use client";
-
-import * as React from "react";
+import { FC, useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "../ui/button";
+import { Banknote, Dumbbell, Medal } from "lucide-react";
+import IconMenu from "../IconMenu";
+import { ResponsiveDialog } from "../ResponsiveDialog";
+import { AddCashCustomerForm } from "../forms/AddCashCustomerForm";
 import Link from "next/link";
 
-import { cn } from "@/lib/utils";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
+interface AddCustomerButtonProps {}
 
-export default function NavigationMenuDemo() {
+const AddCustomerButton: FC<AddCustomerButtonProps> = ({}) => {
+  const [isAddCustomerOpen, setIsAddCustomerOpen] = useState(false);
   return (
-    <NavigationMenu>
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Add Customer</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="col gap-3  md:w-[200px] lg:w-[200px] lg:grid-cols-[.75fr_1fr]">
-              <ListItem href="/docs" title="Add External Customer">
-                Add customer that is paying with cash.
-              </ListItem>
-              <ListItem
-                href="https://buy.stripe.com/test_dR6bMIdBngqw2GscMN"
-                title="Add 1st Time Non-Competitive"
-              >
-                Non-competitive membership with intial fee.
-              </ListItem>
-              <ListItem
-                href="https://buy.stripe.com/test_aEUg2Y1SF5LS6WIcMM"
-                title="Add 1st Time Competitive"
-              >
-                Competitive membership with intial fee.
-              </ListItem>
-              <ListItem
-                href="https://buy.stripe.com/test_8wM3gc2WJeio4OA5km"
-                title="Add Non-Competitive Customer"
-              >
-                Non-competitive membership without intial fee.
-              </ListItem>
-              <ListItem
-                href="https://buy.stripe.com/test_7sIdUQ0OBcag5SEfZ1"
-                title="Add Competitive Customer"
-              >
-                Competitive membership without intial fee.
-              </ListItem>
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
+    <>
+      <ResponsiveDialog
+        isOpen={isAddCustomerOpen}
+        setIsOpen={setIsAddCustomerOpen}
+        title="Add Cash Customer"
+      >
+        <AddCashCustomerForm setIsOpen={setIsAddCustomerOpen} />
+      </ResponsiveDialog>
+      <div>
+        <Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger>Add Customer</DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Type of Customer</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <button
+                  onClick={() => {
+                    setIsAddCustomerOpen(true);
+                  }}
+                >
+                  <IconMenu
+                    text="Cash Customers"
+                    icon={<Banknote className="h-4 w-4" />}
+                  />
+                </button>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                {" "}
+                <Link href={"https://buy.stripe.com/3cscQa7UraZKbhm8ww"}>
+                  <IconMenu
+                    text="Newbie Non-Competive Customers"
+                    icon={<Dumbbell className="h-4 w-4" />}
+                  />
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                {" "}
+                <Link href={"https://buy.stripe.com/fZe7vQ5Mjgk45X2145"}>
+                  <IconMenu
+                    text="Newbie Competive Customers"
+                    icon={<Medal className="h-4 w-4" />}
+                  />
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                {" "}
+                <Link href={"https://buy.stripe.com/eVa5nIeiPc3O0CIdQT"}>
+                  <IconMenu
+                    text="Non-Competive Customers"
+                    icon={<Dumbbell className="h-4 w-4" />}
+                  />
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                {" "}
+                <Link href={"https://buy.stripe.com/bIY03o7Ur3xi5X24gi"}>
+                  <IconMenu
+                    text="Competive Customers"
+                    icon={<Medal className="h-4 w-4" />}
+                  />
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </Button>
+      </div>
+    </>
   );
-}
+};
 
-const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
->(({ className, title, children, ...props }, ref) => {
-  return (
-    <li>
-      <NavigationMenuLink asChild>
-        <a
-          ref={ref}
-          className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className
-          )}
-          {...props}
-        >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-            {children}
-          </p>
-        </a>
-      </NavigationMenuLink>
-    </li>
-  );
-});
-ListItem.displayName = "ListItem";
+export default AddCustomerButton;

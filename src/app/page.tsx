@@ -1,5 +1,6 @@
-import SignInForm from "@/components/SignInForm";
 import Image from "next/image";
+import SignUpForm from "./auth/forms/SignUpForm";
+import SignInForm from "./auth/forms/SignInForm";
 
 export default function Home() {
   return (
