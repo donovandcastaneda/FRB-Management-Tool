@@ -1,6 +1,7 @@
 "use server";
 
 import createSupabaseServerClient from "@/lib/supabase/server";
+import { unstable_noStore as noStore} from 'next/cache';
 import { redirect } from "next/navigation";
 
 export async function signUpWithEmailAndPassword(data: {
@@ -31,6 +32,7 @@ return JSON.stringify(result);
 }
 
 export async function readUserSession() {
+  noStore()
   const supabase = await createSupabaseServerClient();
   return supabase.auth.getUser();
 }

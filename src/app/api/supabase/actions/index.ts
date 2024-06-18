@@ -1,7 +1,7 @@
 "use server";
 
 import createSupabaseServerClient from "@/lib/supabase/server";
-
+import { revalidatePath, unstable_noStore as noStore } from "next/cache";
 
 export async function createCustomer(
   name: string,
@@ -16,18 +16,21 @@ export async function createCustomer(
 
   const result = await supabase
     .from("Customers")
-    .insert({ name, age, phone, email, status, plan, amount }).single();
+    .insert({ name, age, phone, email, status, plan, amount })
+    .single();
+
+  revalidatePath("/dashboard"); //when we mutuate
 
   return JSON.stringify(result);
 }
 
-// export async function readCustomer(){
+export async function readCustomer() {
+  noStore(); //cache stuff
 
-//     const supabase = await createSupabaseServerClient()
+  const supabase = await createSupabaseServerClient();
 
-//     const result = await supabase.from("Customers").
-
-// }
+  return await supabase.from("Customers").select("*");
+}
 
 export async function updateCustomer(
   name: string,
