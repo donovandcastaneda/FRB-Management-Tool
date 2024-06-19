@@ -34,6 +34,7 @@ import { cn } from "@/lib/utils";
 const formSchema = z.object({
   name: z.string().min(1),
   age: z.coerce.number().min(1),
+  wgt: z.string().min(1),
   email: z.string().min(1),
   amount: z.coerce.number().min(1),
   phone: z.string().min(1),
@@ -60,6 +61,7 @@ export function AddCashCustomerForm({
       const result = await createCustomer(
         data.name,
         data.age,
+        data.wgt,
         data.email,
         data.amount,
         data.plan,
@@ -68,17 +70,16 @@ export function AddCashCustomerForm({
       );
       const { error } = JSON.parse(result);
 
-
-
-
       if (error?.message) {
-        console.log("Error message:", error.message); // Add logging here
+        console.log("Error message:", error.message);
         toast({
           title: "Error",
           variant: "destructive",
           description: (
             <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-              <code className="text-white">Couldnt add customer: {error.message}</code>
+              <code className="text-white">
+                Couldnt add customer: {error.message}
+              </code>
             </pre>
           ),
         });
@@ -91,13 +92,8 @@ export function AddCashCustomerForm({
               <code className="text-white">Added Customer</code>
             </pre>
           ),
-          
         });
-
       }
-
-      
-
     });
   }
   return (
@@ -132,6 +128,89 @@ export function AddCashCustomerForm({
                 />
               </FormControl>
               <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="wgt"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Weight</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a weight for the customer..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Pee Wee (55)">Pee Wee (55)</SelectItem>
+                    <SelectItem value="Bantam (65)">Bantam (65)</SelectItem>
+                    <SelectItem value="Junior (80)">Junior (80)</SelectItem>
+                    <SelectItem value="Intermediate (95)">
+                      Intermediate (95)
+                    </SelectItem>
+                    <SelectItem value="Atomweight (102)">
+                      Atomweight (102)
+                    </SelectItem>
+
+                    <SelectItem value="Mini Flyweight (105)">
+                      Mini Flyweight (105)
+                    </SelectItem>
+                    <SelectItem value="Light Flyweight (108)">
+                      Light Flyweight (108)
+                    </SelectItem>
+                    <SelectItem value="Flyweight (112)">
+                      Flyweight (112)
+                    </SelectItem>
+                    <SelectItem value="Super Flyweight (115)">
+                      Super Flyweight (115)
+                    </SelectItem>
+                    <SelectItem value="Bantamweight (118)">
+                      Bantamweight (118)
+                    </SelectItem>
+                    <SelectItem value="Super Bantamweight (122)">
+                      Super Bantamweight (122)
+                    </SelectItem>
+                    <SelectItem value="Featherweight (126)">
+                      Featherweight (126)
+                    </SelectItem>
+                    <SelectItem value="Super Featherweight (130)">
+                      Super Featherweight (130)
+                    </SelectItem>
+                    <SelectItem value="Lightweight (135)">
+                      Lightweight (135)
+                    </SelectItem>
+                    <SelectItem value="Super Lightweight (140)">
+                      Super Lightweight (140)
+                    </SelectItem>
+                    <SelectItem value="Welterweight (147)">
+                      Welterweight (147)
+                    </SelectItem>
+                    <SelectItem value="Super Welterweight (154)">
+                      Super Welterweight (154)
+                    </SelectItem>
+                    <SelectItem value="Middleweight (160)">
+                      Middleweight (160)
+                    </SelectItem>
+                    <SelectItem value="Super Middleweight (168)">
+                      Super Middleweight (168)
+                    </SelectItem>
+                    <SelectItem value="Light Heavyweight (175)">
+                      Light Heavyweight (175)
+                    </SelectItem>
+                    <SelectItem value="Cruiserweight (200)">
+                      Cruiserweight (200)
+                    </SelectItem>
+                    <SelectItem value="Heavyweight (200+)">
+                      Heavyweight (200+)
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}

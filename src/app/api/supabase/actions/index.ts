@@ -6,6 +6,7 @@ import { revalidatePath, unstable_noStore as noStore } from "next/cache";
 export async function createCustomer(
   name: string,
   age: number,
+  wgt: string,
   email: string,
   amount: number,
   plan: string,
@@ -16,7 +17,7 @@ export async function createCustomer(
 
   const result = await supabase
     .from("Customers")
-    .insert({ name, age, phone, email, status, plan, amount })
+    .insert({ name, age, wgt, phone, email, status, plan, amount })
     .single();
 
   revalidatePath("/dashboard"); //when we mutuate

@@ -56,6 +56,20 @@ export const columns: ColumnDef<Payment>[] = [
     },
   },
   {
+    accessorKey: "wgt",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Wgt
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
+  {
     accessorKey: "email",
     header: ({ column }) => {
       return (
@@ -101,10 +115,10 @@ export const columns: ColumnDef<Payment>[] = [
       );
     },
   },
-  {
-    accessorKey: "amount",
-    header: "Amount",
-  },
+  // {
+  //   accessorKey: "amount",
+  //   header: "Amount",
+  // },
   {
     accessorKey: "creation",
     header: "Creation Date",
