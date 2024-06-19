@@ -17,8 +17,8 @@ const useCustomers = () => {
       try {
         const { data: supabaseCustomers } = await readCustomer();
         const stripeResponse = await axios.get('/api/stripe/get-customers');
-        console.log('API response:', stripeResponse.data);
         const stripeCustomers = stripeResponse.data.payments;
+        console.log(stripeCustomers)
 
         const combinedData = [...(supabaseCustomers || []), ...(stripeCustomers || [])];
         setCustomerData(combinedData)
