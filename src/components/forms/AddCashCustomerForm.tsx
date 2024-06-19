@@ -36,7 +36,6 @@ const formSchema = z.object({
   age: z.coerce.number().min(1),
   wgt: z.string().min(1),
   email: z.string().min(1),
-  amount: z.coerce.number().min(1),
   phone: z.string().min(1),
   plan: z.string().min(1),
   status: z.string().min(1),
@@ -63,7 +62,6 @@ export function AddCashCustomerForm({
         data.age,
         data.wgt,
         data.email,
-        data.amount,
         data.plan,
         data.phone,
         data.status
@@ -303,25 +301,7 @@ export function AddCashCustomerForm({
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="amount"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Amount</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  placeholder="Enter Amount..."
-                  min={1}
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        
         <div className="flex justify-end">
           <Button type="submit" className="">
             Submit

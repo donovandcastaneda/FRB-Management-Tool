@@ -8,7 +8,6 @@ export async function createCustomer(
   age: number,
   wgt: string,
   email: string,
-  amount: number,
   plan: string,
   phone: string,
   status: string
@@ -17,7 +16,7 @@ export async function createCustomer(
 
   const result = await supabase
     .from("Customers")
-    .insert({ name, age, wgt, phone, email, status, plan, amount })
+    .insert({ name, age, wgt, phone, email, status, plan,  })
     .single();
 
   revalidatePath("/dashboard"); //when we mutuate
