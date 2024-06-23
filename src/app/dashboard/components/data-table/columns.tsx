@@ -2,8 +2,15 @@ import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Ellipsis, Pencil, Trash2 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { deleteCustomer } from "../api/supabase/actions";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { deleteCustomer } from "../../../api/supabase/actions";
 import IconMenu from "@/components/IconMenu";
 import { useState } from "react";
 import { ResponsiveDialog } from "@/components/ResponsiveDialog";
@@ -17,8 +24,8 @@ export type Payment = {
   creation: Date;
 };
 type Row = {
-  row: any
-}
+  row: any;
+};
 
 const ActionsCell: React.FC<Row> = ({ row }) => {
   const payment = row.original;
@@ -31,7 +38,10 @@ const ActionsCell: React.FC<Row> = ({ row }) => {
         setIsOpen={setIsEditCustomerOpen}
         title="Edit Cash Customer"
       >
-        <UpdateCashCustomerForm setIsOpen={setIsEditCustomerOpen} payment={payment} />
+        <UpdateCashCustomerForm
+          setIsOpen={setIsEditCustomerOpen}
+          payment={payment}
+        />
       </ResponsiveDialog>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -51,7 +61,6 @@ const ActionsCell: React.FC<Row> = ({ row }) => {
           <DropdownMenuItem onClick={() => deleteCustomer(payment.id)}>
             <IconMenu text="Delete" icon={<Trash2 className="h-4 w-4" />} />
           </DropdownMenuItem>
-        
         </DropdownMenuContent>
       </DropdownMenu>
     </>

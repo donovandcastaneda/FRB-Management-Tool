@@ -25,7 +25,6 @@ export async function GET(req: NextRequest, res: NextResponse) {
         return {
           id: customer.id,
           name: customer.name,
-          // age:
           email: customer.email,
           phone: customer.phone,
           status: subscription.status,

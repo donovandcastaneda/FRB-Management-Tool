@@ -286,7 +286,7 @@ export function AddCashCustomerForm({
                         icon={<Dumbbell className="h-4 w-4" />}
                       />{" "}
                     </SelectItem>
-                    <SelectItem value="Newbie Competitive">
+                    <SelectItem value="Competitive">
                       <IconMenu
                         text="Competive"
                         icon={<Medal className="h-4 w-4" />}
