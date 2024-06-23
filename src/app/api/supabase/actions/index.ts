@@ -16,7 +16,7 @@ export async function createCustomer(
 
   const result = await supabase
     .from("Customers")
-    .insert({ name, age, wgt, phone, email, status, plan,  })
+    .insert({ name, age, wgt, phone, email, status, plan })
     .single();
 
   revalidatePath("/dashboard"); //when we mutuate
@@ -25,7 +25,7 @@ export async function createCustomer(
 }
 
 export async function readCustomer() {
-  noStore(); //cache stuff
+  noStore();
 
   const supabase = await createSupabaseServerClient();
 
@@ -33,25 +33,35 @@ export async function readCustomer() {
 }
 
 export async function updateCustomer(
+  id: string,
   name: string,
   age: number,
+  wgt: string,
   email: string,
-  amount: number,
   plan: string,
   phone: string,
   status: string
 ) {
   const supabase = await createSupabaseServerClient();
 
-  const result = await supabase
-    .from("Customers")
-    .update({ name, age, phone, email, status, plan, amount });
+  const { data, error } = await supabase
+    .from('Customers')
+    .update({ name, age, wgt, email, plan, phone, status })
+    .eq('id', id)
+
+  if (error) {
+    console.log(error)
+    return JSON.stringify({ error });
+  }
+  revalidatePath("/dashboard"); 
+  return JSON.stringify({ data });
+
 }
 
-// export async function deleteCustomer(){
 
-//     const supabase = await createSupabaseServerClient()
+export async function deleteCustomer(id: string) {
+  const supabase = await createSupabaseServerClient();
 
-//     const result = await supabase.from("Customers").
-
-// }
+  await supabase.from("Customers").delete().eq("id", id);
+  revalidatePath("/dashboard"); 
+}

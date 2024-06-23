@@ -1,10 +1,13 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Ellipsis } from "lucide-react";
+import { ArrowUpDown, Ellipsis, Pencil, Trash2 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { deleteCustomer } from "../api/supabase/actions";
+import IconMenu from "@/components/IconMenu";
+import { useState } from "react";
+import { ResponsiveDialog } from "@/components/ResponsiveDialog";
+import { UpdateCashCustomerForm } from "@/components/forms/UpdateCashCustomerForm";
 
 export type Payment = {
   id: string;
@@ -12,6 +15,47 @@ export type Payment = {
   email: string;
   phone: number;
   creation: Date;
+};
+type Row = {
+  row: any
+}
+
+const ActionsCell: React.FC<Row> = ({ row }) => {
+  const payment = row.original;
+  const [isEditCustomerOpen, setIsEditCustomerOpen] = useState(false);
+
+  return (
+    <>
+      <ResponsiveDialog
+        isOpen={isEditCustomerOpen}
+        setIsOpen={setIsEditCustomerOpen}
+        title="Edit Cash Customer"
+      >
+        <UpdateCashCustomerForm setIsOpen={setIsEditCustomerOpen} payment={payment} />
+      </ResponsiveDialog>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <Ellipsis className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>
+            <button onClick={() => setIsEditCustomerOpen(true)}>
+              <IconMenu text="Edit" icon={<Pencil className="h-4 w-4" />} />
+            </button>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => deleteCustomer(payment.id)}>
+            <IconMenu text="Delete" icon={<Trash2 className="h-4 w-4" />} />
+          </DropdownMenuItem>
+        
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
+  );
 };
 
 export const columns: ColumnDef<Payment>[] = [
@@ -41,7 +85,6 @@ export const columns: ColumnDef<Payment>[] = [
     accessorKey: "name",
     header: "Name",
   },
-
   {
     accessorKey: "age",
     header: ({ column }) => {
@@ -116,10 +159,6 @@ export const columns: ColumnDef<Payment>[] = [
       );
     },
   },
-  // {
-  //   accessorKey: "amount",
-  //   header: "Amount",
-  // },
   {
     accessorKey: "creation",
     header: "Creation Date",
@@ -127,29 +166,6 @@ export const columns: ColumnDef<Payment>[] = [
   {
     id: "actions",
     enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original
- 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <Ellipsis className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    }}
+    cell: ActionsCell,
+  },
 ];
