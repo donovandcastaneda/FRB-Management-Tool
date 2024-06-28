@@ -32,7 +32,7 @@ const AddCustomerButton: FC<AddCustomerButtonProps> = ({}) => {
           <DropdownMenu>
             <DropdownMenuTrigger>Add Customer</DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuLabel>Type of Customer</DropdownMenuLabel>
+              <DropdownMenuLabel></DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <button
@@ -50,25 +50,17 @@ const AddCustomerButton: FC<AddCustomerButtonProps> = ({}) => {
                 {" "}
                 <Link href={"https://buy.stripe.com/3cscQa7UraZKbhm8ww"}>
                   <IconMenu
-                    text="Newbie Non-Competive Customers"
+                    text="New ($100)"
                     icon={<Dumbbell className="h-4 w-4" />}
                   />
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                {" "}
-                <Link href={"https://buy.stripe.com/fZe7vQ5Mjgk45X2145"}>
-                  <IconMenu
-                    text="Newbie Competive Customers"
-                    icon={<Medal className="h-4 w-4" />}
-                  />
-                </Link>
-              </DropdownMenuItem>
+             
               <DropdownMenuItem>
                 {" "}
                 <Link href={"https://buy.stripe.com/eVa5nIeiPc3O0CIdQT"}>
                   <IconMenu
-                    text="Non-Competive Customers"
+                    text="Non-Competive Customers ($60)"
                     icon={<Dumbbell className="h-4 w-4" />}
                   />
                 </Link>
@@ -77,7 +69,7 @@ const AddCustomerButton: FC<AddCustomerButtonProps> = ({}) => {
                 {" "}
                 <Link href={"https://buy.stripe.com/bIY03o7Ur3xi5X24gi"}>
                   <IconMenu
-                    text="Competive Customers"
+                    text="Competive Customers ($40)"
                     icon={<Medal className="h-4 w-4" />}
                   />
                 </Link>

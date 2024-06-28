@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { createStripeCustomer } from "../../supabase/actions";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 export async function GET(req: NextRequest, res: NextResponse) {
@@ -8,7 +9,11 @@ export async function GET(req: NextRequest, res: NextResponse) {
       limit: 10,
     });
 
-    const payments = await Promise.all(customers.data.map(async (customer) => {
+    
+
+    const payments =  await Promise.all(customers.data.map(async (customer) => {
+      await createStripeCustomer(customer.id); 
+
       const subscriptions = await stripe.subscriptions.list({
         customer: customer.id,
         status: 'all',
@@ -18,7 +23,6 @@ export async function GET(req: NextRequest, res: NextResponse) {
         const item = subscription.items.data[0];
         const price = await stripe.prices.retrieve(item.price.id);
         const product = await stripe.products.retrieve(price.product as string);
-        // const checkout = await stripe.checkout.sessions.retrieve()
 
        
 

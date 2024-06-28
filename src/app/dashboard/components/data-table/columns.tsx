@@ -15,6 +15,7 @@ import IconMenu from "@/components/IconMenu";
 import { useState } from "react";
 import { ResponsiveDialog } from "@/components/ResponsiveDialog";
 import { UpdateCashCustomerForm } from "@/components/forms/UpdateCashCustomerForm";
+import { UpdateStripeCustomerForm } from "@/components/forms/UpdateStripeCustomers";
 
 export type Payment = {
   id: string;
@@ -22,6 +23,8 @@ export type Payment = {
   email: string;
   phone: number;
   creation: Date;
+  source: string; 
+
 };
 type Row = {
   row: any;
@@ -38,10 +41,17 @@ const ActionsCell: React.FC<Row> = ({ row }) => {
         setIsOpen={setIsEditCustomerOpen}
         title="Edit Cash Customer"
       >
-        <UpdateCashCustomerForm
-          setIsOpen={setIsEditCustomerOpen}
-          payment={payment}
-        />
+          {payment.source === 'stripe' ? (
+          <UpdateStripeCustomerForm
+            setIsOpen={setIsEditCustomerOpen}
+            payment={payment}
+          />
+        ) : (
+          <UpdateCashCustomerForm
+            setIsOpen={setIsEditCustomerOpen}
+            payment={payment}
+          />
+        )}
       </ResponsiveDialog>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -163,6 +173,20 @@ export const columns: ColumnDef<Payment>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Plan
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
+  {
+    accessorKey: "amount",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Amount
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );

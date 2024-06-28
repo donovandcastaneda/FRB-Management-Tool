@@ -22,11 +22,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import IconMenu from "../IconMenu";
 import { Dumbbell, LoaderCircle, Medal } from "lucide-react";
-import { updateCashCustomer } from "@/app/api/supabase/actions";
+
 import { toast, useToast } from "../ui/use-toast";
 import { cn } from "@/lib/utils";
+import { updateStripeCustomer } from "@/app/api/supabase/actions";
 
 const formSchema = z.object({
   id: z.any(),
@@ -37,7 +39,6 @@ const formSchema = z.object({
   phone: z.string().min(1),
   plan: z.string().min(1),
   status: z.string().min(1),
-  amount: z.coerce.number().min(1),
 });
 
 interface Payment {
@@ -50,7 +51,6 @@ interface Payment {
   wgt: string;
   plan: string;
   status: string;
-  amount: number
 }
 
 interface UpdateCashCustomerFormProps {
@@ -58,7 +58,7 @@ interface UpdateCashCustomerFormProps {
   payment: Payment;
 }
 
-export function UpdateCashCustomerForm({
+export function UpdateStripeCustomerForm({
   payment,
   setIsOpen,
 }: UpdateCashCustomerFormProps) {
@@ -73,17 +73,7 @@ export function UpdateCashCustomerForm({
     console.log("Submitted data:", data);
 
     startTransition(async () => {
-      const result = await updateCashCustomer(
-        data.id, 
-        data.name,
-        data.age,
-        data.wgt,
-        data.email,
-        data.plan,
-        data.phone,
-        data.status,
-        data.amount
-      );
+      const result = await updateStripeCustomer(data.id, data.age, data.wgt);
 
       const { error } = JSON.parse(result);
 
@@ -122,20 +112,7 @@ export function UpdateCashCustomerForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter Name..." {...field} />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+   
         <FormField
           control={form.control}
           name="age"
@@ -184,112 +161,6 @@ export function UpdateCashCustomerForm({
                   </SelectContent>
                 </Select>
               </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="phone"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Phone Number</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter Phone Number..." {...field} />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter Email..." {...field} />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="status"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Status</FormLabel>
-              <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a status for the customer..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Active">Active</SelectItem>
-                    <SelectItem value="Inactive">Inactive</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="plan"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Plan</FormLabel>
-              <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select a plan..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Non-Competitive">
-                      <IconMenu
-                        text="Non-Competitive"
-                        icon={<Dumbbell className="h-4 w-4" />}
-                      />{" "}
-                    </SelectItem>
-                    <SelectItem value="Newbie Competitive">
-                      <IconMenu
-                        text="Competitive"
-                        icon={<Medal className="h-4 w-4" />}
-                      />{" "}
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-          <FormField
-          control={form.control}
-          name="amount"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Amount</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  placeholder="Enter Amount..."
-                  min={1}
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription></FormDescription>
               <FormMessage />
             </FormItem>
           )}

@@ -39,6 +39,7 @@ const formSchema = z.object({
   phone: z.string().min(1),
   plan: z.string().min(1),
   status: z.string().min(1),
+  amount: z.coerce.number().min(1),
 });
 
 export function AddCashCustomerForm({
@@ -64,7 +65,8 @@ export function AddCashCustomerForm({
         data.email,
         data.plan,
         data.phone,
-        data.status
+        data.status,
+        data.amount
       );
       const { error } = JSON.parse(result);
 
@@ -294,6 +296,25 @@ export function AddCashCustomerForm({
                     </SelectItem>
                   </SelectContent>
                 </Select>
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+          <FormField
+          control={form.control}
+          name="amount"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Amount</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  placeholder="Enter Amount..."
+                  min={1}
+                  {...field}
+                />
               </FormControl>
               <FormDescription></FormDescription>
               <FormMessage />

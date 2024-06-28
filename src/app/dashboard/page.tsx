@@ -5,8 +5,9 @@ import { DataTable } from "./components/data-table/data-table";
 import axios from "axios";
 import { readUserSession } from "../auth/actions";
 import { redirect } from "next/navigation";
-import { readCustomer } from "../api/supabase/actions";
+import { readCashCustomer, readStripeCustomer } from "../api/supabase/actions";
 import Dashboard from "./components/dashboard";
+import { any } from "zod";
 
 const useCustomers = () => {
   const [loading, setLoading] = useState(true);
@@ -15,14 +16,26 @@ const useCustomers = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data: supabaseCustomers } = await readCustomer();
+        const { data: supabaseCashCustomers} = await readCashCustomer() 
+
+
+
         const stripeResponse = await axios.get("/api/stripe/get-customers");
-        const stripeCustomers = stripeResponse.data.payments;
-        console.log(stripeCustomers);
+        const stripeCustomers = stripeResponse.data.payments.map((customer: any) => ({  //?
+          ...customer,
+          source: 'stripe'
+        }));
+
+        const supabaseData = (supabaseCashCustomers || []).map((customer: any) => ({
+          ...customer,
+          source: 'internal'
+        }));
+
+       
 
         const combinedData = [
-          ...(supabaseCustomers || []),
-          ...(stripeCustomers || []),
+          ...supabaseData,
+          ...stripeCustomers,
         ];
         setCustomerData(combinedData);
       } catch (error) {
@@ -37,6 +50,7 @@ const useCustomers = () => {
 
   return { customerData, loading };
 };
+
 
 export default function DemoPage() {
   const { customerData, loading } = useCustomers();
