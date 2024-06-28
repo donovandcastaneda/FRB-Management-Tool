@@ -27,6 +27,7 @@ import { Dumbbell, LoaderCircle, Medal } from "lucide-react";
 import { updateCashCustomer } from "@/app/api/supabase/actions";
 import { toast, useToast } from "../ui/use-toast";
 import { cn } from "@/lib/utils";
+import { Input } from "../ui/input";
 
 const formSchema = z.object({
   id: z.any(),
