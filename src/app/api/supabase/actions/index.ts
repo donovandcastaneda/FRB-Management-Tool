@@ -12,12 +12,13 @@ export async function createCustomer(
   phone: string,
   status: string,
   amount: number,
+  level: string,
 ) {
   const supabase = await createSupabaseServerClient();
 
   const result = await supabase
     .from("Customers")
-    .insert({ name, age, wgt, phone, email, status, plan, amount })
+    .insert({ name, age, wgt, phone, email, status, plan, amount, level})
     .single();
 
   revalidatePath("/dashboard"); 
@@ -60,7 +61,8 @@ export async function updateCashCustomer(
   plan: string,
   phone: string,
   status: string,
-  amount: number
+  amount: number,
+  level: string
 ) {
   const supabase = await createSupabaseServerClient();
 
@@ -68,7 +70,7 @@ export async function updateCashCustomer(
 
   const { data, error } = await supabase
     .from("Customers")
-    .update({ name, age, wgt, email, plan, phone, status, amount })
+    .update({ name, age, wgt, email, plan, phone, status, amount, level })
     .eq("id", id);
 
   if (error) {

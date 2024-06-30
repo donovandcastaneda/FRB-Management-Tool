@@ -165,6 +165,20 @@ export const columns: ColumnDef<Payment>[] = [
     },
   },
   {
+    accessorKey: "level",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Level
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
+  {
     accessorKey: "plan",
     header: ({ column }) => {
       return (

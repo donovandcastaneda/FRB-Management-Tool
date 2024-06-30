@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import IconMenu from "../IconMenu";
-import { Dumbbell, LoaderCircle, Medal } from "lucide-react";
+import { ArrowRight, Dumbbell, LoaderCircle, Medal } from "lucide-react";
 import { updateCashCustomer } from "@/app/api/supabase/actions";
 import { toast, useToast } from "../ui/use-toast";
 import { cn } from "@/lib/utils";
@@ -39,6 +39,8 @@ const formSchema = z.object({
   plan: z.string().min(1),
   status: z.string().min(1),
   amount: z.coerce.number().min(1),
+  level: z.string().min(1),
+
 });
 
 interface Payment {
@@ -52,6 +54,7 @@ interface Payment {
   plan: string;
   status: string;
   amount: number
+  level: string
 }
 
 interface UpdateCashCustomerFormProps {
@@ -63,6 +66,7 @@ export function UpdateCashCustomerForm({
   payment,
   setIsOpen,
 }: UpdateCashCustomerFormProps) {
+  const [formStep, setFormStep] = React.useState(0)
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -83,7 +87,8 @@ export function UpdateCashCustomerForm({
         data.plan,
         data.phone,
         data.status,
-        data.amount
+        data.amount,
+        data.level
       );
 
       const { error } = JSON.parse(result);
@@ -122,7 +127,12 @@ export function UpdateCashCustomerForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+      <div
+        className={cn({
+          hidden: formStep == 1,
+        })}
+      >
         <FormField
           control={form.control}
           name="name"
@@ -171,7 +181,6 @@ export function UpdateCashCustomerForm({
                     <SelectValue placeholder="Select a weight for the customer..." />
                   </SelectTrigger>
                   <SelectContent>
-                    {/* your weight categories here */}
                     <SelectItem value="Pee Wee (55)">Pee Wee (55)</SelectItem>
                     <SelectItem value="Bantam (65)">Bantam (65)</SelectItem>
                     <SelectItem value="Junior (80)">Junior (80)</SelectItem>
@@ -181,7 +190,58 @@ export function UpdateCashCustomerForm({
                     <SelectItem value="Atomweight (102)">
                       Atomweight (102)
                     </SelectItem>
-                    {/* Add more weight categories as needed */}
+
+                    <SelectItem value="Mini Flyweight (105)">
+                      Mini Flyweight (105)
+                    </SelectItem>
+                    <SelectItem value="Light Flyweight (108)">
+                      Light Flyweight (108)
+                    </SelectItem>
+                    <SelectItem value="Flyweight (112)">
+                      Flyweight (112)
+                    </SelectItem>
+                    <SelectItem value="Super Flyweight (115)">
+                      Super Flyweight (115)
+                    </SelectItem>
+                    <SelectItem value="Bantamweight (118)">
+                      Bantamweight (118)
+                    </SelectItem>
+                    <SelectItem value="Super Bantamweight (122)">
+                      Super Bantamweight (122)
+                    </SelectItem>
+                    <SelectItem value="Featherweight (126)">
+                      Featherweight (126)
+                    </SelectItem>
+                    <SelectItem value="Super Featherweight (130)">
+                      Super Featherweight (130)
+                    </SelectItem>
+                    <SelectItem value="Lightweight (135)">
+                      Lightweight (135)
+                    </SelectItem>
+                    <SelectItem value="Super Lightweight (140)">
+                      Super Lightweight (140)
+                    </SelectItem>
+                    <SelectItem value="Welterweight (147)">
+                      Welterweight (147)
+                    </SelectItem>
+                    <SelectItem value="Super Welterweight (154)">
+                      Super Welterweight (154)
+                    </SelectItem>
+                    <SelectItem value="Middleweight (160)">
+                      Middleweight (160)
+                    </SelectItem>
+                    <SelectItem value="Super Middleweight (168)">
+                      Super Middleweight (168)
+                    </SelectItem>
+                    <SelectItem value="Light Heavyweight (175)">
+                      Light Heavyweight (175)
+                    </SelectItem>
+                    <SelectItem value="Cruiserweight (200)">
+                      Cruiserweight (200)
+                    </SelectItem>
+                    <SelectItem value="Heavyweight (200+)">
+                      Heavyweight (200+)
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -217,6 +277,12 @@ export function UpdateCashCustomerForm({
             </FormItem>
           )}
         />
+      </div>
+      <div
+        className={cn({
+          hidden: formStep == 0,
+        })}
+      >
         <FormField
           control={form.control}
           name="status"
@@ -241,6 +307,7 @@ export function UpdateCashCustomerForm({
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="plan"
@@ -258,13 +325,13 @@ export function UpdateCashCustomerForm({
                   <SelectContent>
                     <SelectItem value="Non-Competitive">
                       <IconMenu
-                        text="Non-Competitive"
+                        text="Non-Competive"
                         icon={<Dumbbell className="h-4 w-4" />}
                       />{" "}
                     </SelectItem>
-                    <SelectItem value="Newbie Competitive">
+                    <SelectItem value="Competitive">
                       <IconMenu
-                        text="Competitive"
+                        text="Competive"
                         icon={<Medal className="h-4 w-4" />}
                       />{" "}
                     </SelectItem>
@@ -276,7 +343,32 @@ export function UpdateCashCustomerForm({
             </FormItem>
           )}
         />
-          <FormField
+        <FormField
+          control={form.control}
+          name="level"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Level</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a status for the customer..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Red">Red</SelectItem>
+                    <SelectItem value="Yellow">Yellow</SelectItem>
+                    <SelectItem value="Green">Green</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
           control={form.control}
           name="amount"
           render={({ field }) => (
@@ -295,14 +387,50 @@ export function UpdateCashCustomerForm({
             </FormItem>
           )}
         />
+      </div>
 
-        <div className="flex justify-end">
-          <Button type="submit">
-            Update
-            {isPending && <LoaderCircle className="animate-spin ml-2" />}
-          </Button>
-        </div>
-      </form>
-    </Form>
+      <div className="flex justify-end gap-2">
+        <Button
+          type="button"
+          variant={"ghost"}
+          className={cn({
+            hidden: formStep == 1,
+          })}
+          onClick={() => {
+            
+
+            setFormStep(1);
+          }}
+        >
+          Next Step
+          <ArrowRight className="w-4 h-4 ml-2" />
+        </Button>
+        <Button
+          type="button"
+          variant={"ghost"}
+          onClick={() => {
+            setFormStep(0);
+          }}
+          className={cn({
+            hidden: formStep == 0,
+          })}
+        >
+          Go Back
+        </Button>
+
+        <Button
+          type="submit"
+          className={cn({
+            hidden: formStep == 0,
+          })}
+        >
+          Submit
+          <LoaderCircle
+            className={cn("animate-spin", { hidden: !isPending })}
+          />
+        </Button>
+      </div>
+    </form>
+  </Form>
   );
 }
